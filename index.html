@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Голосование</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+  background: #111827;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+
+h2 {
+  text-align: center;
+}
+
+.section {
+  margin-top: 20px;
+  padding: 15px;
+  background: #1f2937;
+  border-radius: 12px;
+}
+
+label {
+  display: block;
+  padding: 8px;
+  margin: 5px 0;
+  background: #374151;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+label:hover {
+  background: #4b5563;
+}
+
+button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #3b82f6;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2563eb;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h2>🗳 Голосование</h2>
+
+<div class="section">
+<h3>ДЮГО</h3>
+<label><input type="radio" name="dyugo" value="1"> 1</label>
+<label><input type="radio" name="dyugo" value="2"> 2</label>
+<label><input type="radio" name="dyugo" value="3"> 3</label>
+<label><input type="radio" name="dyugo" value="4"> 4</label>
+<label><input type="radio" name="dyugo" value="5"> 5</label>
+</div>
+
+<div class="section">
+<h3>БУМ</h3>
+<label><input type="radio" name="boom" value="1"> 1</label>
+<label><input type="radio" name="boom" value="2"> 2</label>
+<label><input type="radio" name="boom" value="3"> 3</label>
+<label><input type="radio" name="boom" value="4"> 4</label>
+<label><input type="radio" name="boom" value="5"> 5</label>
+</div>
+
+<button onclick="vote()">Голосовать</button>
+
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase.js"></script>
+
+<script>
+let deviceId = localStorage.getItem("deviceId");
+
+if (!deviceId) {
+  deviceId = Math.random().toString(36).substring(2) + Date.now();
+  localStorage.setItem("deviceId", deviceId);
+}
+
+function vote() {
+  const dyugo = document.querySelector('input[name="dyugo"]:checked');
+  const boom = document.querySelector('input[name="boom"]:checked');
+
+  if (!dyugo || !boom) {
+    alert("Выбери обе категории");
+    return;
+  }
+
+  const userRef = db.ref("voted/" + deviceId);
+
+  userRef.once("value").then(snapshot => {
+
+    if (snapshot.exists()) {
+      alert("Ты уже голосовал ❌");
+      return;
+    }
+
+    db.ref("votes/dyugo").push(dyugo.value);
+    db.ref("votes/boom").push(boom.value);
+
+    userRef.set(true);
+
+    alert("Голос засчитан ✅");
+  });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>LIVE Выборы</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #050b1a;
+  color: white;
+}
+
+/* верхняя панель как ТВ */
+.header {
+  text-align: center;
+  padding: 10px;
+  font-size: 22px;
+  background: #0b1226;
+  border-bottom: 2px solid #1f2a44;
+}
+
+/* основной экран */
+.screen {
+  width: 100vw;
+  height: calc(100vh - 50px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 16:9 блок */
+.dashboard {
+  width: min(1200px, 95vw);
+  height: calc(min(1200px, 95vw) * 9 / 16);
+  display: flex;
+  gap: 12px;
+}
+
+/* карточки */
+.box {
+  flex: 1;
+  background: #0f172a;
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  transition: 0.3s;
+}
+
+/* лидер подсветка */
+.box.leader {
+  border: 2px solid #22c55e;
+  box-shadow: 0 0 20px #22c55e55;
+}
+
+/* заголовок */
+.title {
+  text-align: center;
+  font-size: 18px;
+  margin: 5px 0;
+}
+
+/* проценты как в ТВ */
+.percent {
+  text-align: center;
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* график */
+canvas {
+  flex: 1;
+  width: 100% !important;
+  height: 100% !important;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">📺 LIVE ВЫБОРЫ</div>
+
+<div class="screen">
+
+<div class="dashboard">
+
+  <div class="box" id="box1">
+    <div class="title">ДЮГО</div>
+    <div class="percent" id="p1">0%</div>
+    <canvas id="c1"></canvas>
+  </div>
+
+  <div class="box" id="box2">
+    <div class="title">БУМ</div>
+    <div class="percent" id="p2">0%</div>
+    <canvas id="c2"></canvas>
+  </div>
+
+</div>
+
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase.js"></script>
+
+<script>
+const chart1 = new Chart(document.getElementById("c1"), {
+  type: "bar",
+  data: {
+    labels: ["1","2","3","4","5"],
+    datasets: [{
+      label: "ДЮГО",
+      data: [0,0,0,0,0],
+      backgroundColor: "#3b82f6"
+    }]
+  }
+});
+
+const chart2 = new Chart(document.getElementById("c2"), {
+  type: "bar",
+  data: {
+    labels: ["1","2","3","4","5"],
+    datasets: [{
+      label: "БУМ",
+      data: [0,0,0,0,0],
+      backgroundColor: "#22c55e"
+    }]
+  }
+});
+
+db.ref("votes").on("value", snap => {
+  const data = snap.val() || {};
+
+  const d1 = [0,0,0,0,0];
+  const d2 = [0,0,0,0,0];
+
+  let total1 = 0;
+  let total2 = 0;
+
+  if (data.dyugo) {
+    Object.values(data.dyugo).forEach(v => {
+      const i = parseInt(v) - 1;
+      d1[i]++;
+      total1++;
+    });
+  }
+
+  if (data.boom) {
+    Object.values(data.boom).forEach(v => {
+      const i = parseInt(v) - 1;
+      d2[i]++;
+      total2++;
+    });
+  }
+
+  chart1.data.datasets[0].data = d1;
+  chart2.data.datasets[0].data = d2;
+
+  chart1.update();
+  chart2.update();
+
+  // проценты
+  const sum = total1 + total2;
+  const p1 = sum === 0 ? 0 : Math.round((total1 / sum) * 100);
+  const p2 = 100 - p1;
+
+  document.getElementById("p1").innerText = p1 + "%";
+  document.getElementById("p2").innerText = p2 + "%";
+
+  // 🏆 лидер подсветка
+  const box1 = document.getElementById("box1");
+  const box2 = document.getElementById("box2");
+
+  box1.classList.remove("leader");
+  box2.classList.remove("leader");
+
+  if (p1 > p2) box1.classList.add("leader");
+  if (p2 > p1) box2.classList.add("leader");
+});
+</script>
+
+</body>
+</html>
