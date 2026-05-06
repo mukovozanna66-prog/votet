@@ -18,7 +18,7 @@ html, body {
   align-items: center;
 }
 
-/* фиксированное окно */
+/* окно */
 .screen {
   width: 1000px;
   height: 600px;
@@ -27,7 +27,6 @@ html, body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
 
 /* верх */
@@ -36,9 +35,10 @@ html, body {
   padding: 10px;
   font-size: 18px;
   background: #111827;
+  color: white;
 }
 
-/* контейнер */
+/* контент */
 .content {
   display: flex;
   flex: 1;
@@ -58,9 +58,16 @@ html, body {
   text-align: center;
   margin-bottom: 10px;
   font-size: 16px;
+  color: white;
 }
 
-/* canvas БЕЗ растяжения текста */
+/* 🔥 ВАЖНО: контейнер вместо фиксированной высоты */
+.chart-box {
+  flex: 1;
+  position: relative;
+}
+
+/* canvas занимает всё */
 canvas {
   width: 100% !important;
   height: 100% !important;
@@ -78,12 +85,16 @@ canvas {
 
   <div class="box">
     <div class="title">ДЮГО</div>
-    <canvas id="c1"></canvas>
+    <div class="chart-box">
+      <canvas id="c1"></canvas>
+    </div>
   </div>
 
   <div class="box">
     <div class="title">БУМ</div>
-    <canvas id="c2"></canvas>
+    <div class="chart-box">
+      <canvas id="c2"></canvas>
+    </div>
   </div>
 
 </div>
@@ -96,32 +107,22 @@ canvas {
 <script src="firebase.js"></script>
 
 <script>
-const chartOptions = {
+const options = {
   responsive: true,
-  maintainAspectRatio: false,
+  maintainAspectRatio: false, // 🔥 ключ — убирает растяжение текста
   plugins: {
     legend: {
       labels: {
-        font: {
-          size: 14
-        }
+        color: "white"
       }
     }
   },
   scales: {
     x: {
-      ticks: {
-        font: {
-          size: 14
-        }
-      }
+      ticks: { color: "white" }
     },
     y: {
-      ticks: {
-        font: {
-          size: 14
-        }
-      }
+      ticks: { color: "white" }
     }
   }
 };
@@ -136,7 +137,7 @@ const chart1 = new Chart(document.getElementById("c1"), {
       backgroundColor: "#3b82f6"
     }]
   },
-  options: chartOptions
+  options
 });
 
 const chart2 = new Chart(document.getElementById("c2"), {
@@ -149,7 +150,7 @@ const chart2 = new Chart(document.getElementById("c2"), {
       backgroundColor: "#22c55e"
     }]
   },
-  options: chartOptions
+  options
 });
 
 db.ref("votes").on("value", snap => {
@@ -159,17 +160,11 @@ db.ref("votes").on("value", snap => {
   const d2 = [0,0,0,0,0];
 
   if (data.dyugo) {
-    Object.values(data.dyugo).forEach(v => {
-      const i = parseInt(v) - 1;
-      if (d1[i] !== undefined) d1[i]++;
-    });
+    Object.values(data.dyugo).forEach(v => d1[v-1]++);
   }
 
   if (data.boom) {
-    Object.values(data.boom).forEach(v => {
-      const i = parseInt(v) - 1;
-      if (d2[i] !== undefined) d2[i]++;
-    });
+    Object.values(data.boom).forEach(v => d2[v-1]++);
   }
 
   chart1.data.datasets[0].data = d1;
