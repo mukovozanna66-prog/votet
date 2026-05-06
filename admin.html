@@ -18,7 +18,7 @@ html, body {
   align-items: center;
 }
 
-/* фиксированное окно */
+/* фикс окно */
 .screen {
   width: 1000px;
   height: 600px;
@@ -27,7 +27,6 @@ html, body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
 
 /* верх */
@@ -39,10 +38,10 @@ html, body {
   color: white;
 }
 
-/* контейнер */
+/* контент */
 .content {
   display: flex;
-  flex: 1;
+  height: 100%;
 }
 
 /* колонки */
@@ -54,7 +53,7 @@ html, body {
   box-sizing: border-box;
 }
 
-/* 👉 ВОТ ИСПРАВЛЕНИЕ: цвет названий БЕЛЫЙ */
+/* название */
 .title {
   text-align: center;
   margin-bottom: 10px;
@@ -62,7 +61,13 @@ html, body {
   color: white;
 }
 
-/* графики */
+/* 🔥 ВАЖНО: фиксируем контейнер графика */
+.chart-wrapper {
+  width: 100%;
+  height: 480px;   /* ключевой фикс */
+}
+
+/* canvas НЕ растягивается */
 canvas {
   width: 100% !important;
   height: 100% !important;
@@ -80,12 +85,16 @@ canvas {
 
   <div class="box">
     <div class="title">ДЮГО</div>
-    <canvas id="c1"></canvas>
+    <div class="chart-wrapper">
+      <canvas id="c1"></canvas>
+    </div>
   </div>
 
   <div class="box">
     <div class="title">БУМ</div>
-    <canvas id="c2"></canvas>
+    <div class="chart-wrapper">
+      <canvas id="c2"></canvas>
+    </div>
   </div>
 
 </div>
@@ -98,6 +107,27 @@ canvas {
 <script src="firebase.js"></script>
 
 <script>
+const options = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      labels: {
+        color: "white",
+        font: { size: 14 }
+      }
+    }
+  },
+  scales: {
+    x: {
+      ticks: { color: "white" }
+    },
+    y: {
+      ticks: { color: "white" }
+    }
+  }
+};
+
 const chart1 = new Chart(document.getElementById("c1"), {
   type: "bar",
   data: {
@@ -107,7 +137,8 @@ const chart1 = new Chart(document.getElementById("c1"), {
       data: [0,0,0,0,0],
       backgroundColor: "#3b82f6"
     }]
-  }
+  },
+  options
 });
 
 const chart2 = new Chart(document.getElementById("c2"), {
@@ -119,7 +150,8 @@ const chart2 = new Chart(document.getElementById("c2"), {
       data: [0,0,0,0,0],
       backgroundColor: "#22c55e"
     }]
-  }
+  },
+  options
 });
 
 db.ref("votes").on("value", snap => {
@@ -129,17 +161,11 @@ db.ref("votes").on("value", snap => {
   const d2 = [0,0,0,0,0];
 
   if (data.dyugo) {
-    Object.values(data.dyugo).forEach(v => {
-      const i = parseInt(v) - 1;
-      if (d1[i] !== undefined) d1[i]++;
-    });
+    Object.values(data.dyugo).forEach(v => d1[v-1]++);
   }
 
   if (data.boom) {
-    Object.values(data.boom).forEach(v => {
-      const i = parseInt(v) - 1;
-      if (d2[i] !== undefined) d2[i]++;
-    });
+    Object.values(data.boom).forEach(v => d2[v-1]++);
   }
 
   chart1.data.datasets[0].data = d1;
