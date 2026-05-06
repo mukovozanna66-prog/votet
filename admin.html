@@ -16,7 +16,6 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
 }
 
 /* фиксированное окно */
@@ -31,7 +30,7 @@ html, body {
   box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
 
-/* верхняя панель */
+/* верх */
 .header {
   text-align: center;
   padding: 10px;
@@ -55,7 +54,7 @@ html, body {
   box-sizing: border-box;
 }
 
-/* заголовки категорий */
+/* 👉 ВОТ ИСПРАВЛЕНИЕ: цвет названий БЕЛЫЙ */
 .title {
   text-align: center;
   margin-bottom: 10px;
@@ -99,35 +98,6 @@ canvas {
 <script src="firebase.js"></script>
 
 <script>
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      labels: {
-        color: "white",
-        font: {
-          size: 14
-        }
-      }
-    }
-  },
-  scales: {
-    x: {
-      ticks: {
-        color: "white",
-        font: { size: 14 }
-      }
-    },
-    y: {
-      ticks: {
-        color: "white",
-        font: { size: 14 }
-      }
-    }
-  }
-};
-
 const chart1 = new Chart(document.getElementById("c1"), {
   type: "bar",
   data: {
@@ -137,8 +107,7 @@ const chart1 = new Chart(document.getElementById("c1"), {
       data: [0,0,0,0,0],
       backgroundColor: "#3b82f6"
     }]
-  },
-  options: chartOptions
+  }
 });
 
 const chart2 = new Chart(document.getElementById("c2"), {
@@ -150,8 +119,7 @@ const chart2 = new Chart(document.getElementById("c2"), {
       data: [0,0,0,0,0],
       backgroundColor: "#22c55e"
     }]
-  },
-  options: chartOptions
+  }
 });
 
 db.ref("votes").on("value", snap => {
