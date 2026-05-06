@@ -10,29 +10,41 @@
 html, body {
   margin: 0;
   padding: 0;
-  height: 100%;
   background: #0f172a;
   font-family: Arial;
   color: white;
+  height: 100%;
 }
 
-/* весь экран */
+/* центр экрана */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* фиксированное окно */
 .screen {
+  width: 1100px;
+  height: 650px;
+  background: #0b1226;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(0,0,0,0.6);
   display: flex;
   flex-direction: column;
-  height: 100vh;
 }
 
-/* верхняя панель */
+/* верх */
 .header {
   text-align: center;
   padding: 12px;
   font-size: 20px;
-  background: #0b1226;
+  background: #111827;
   border-bottom: 1px solid #1f2a44;
 }
 
-/* контейнер графиков */
+/* графики */
 .content {
   flex: 1;
   display: flex;
@@ -41,7 +53,7 @@ html, body {
   box-sizing: border-box;
 }
 
-/* каждая колонка */
+/* колонки */
 .box {
   flex: 1;
   background: #111827;
@@ -54,11 +66,10 @@ html, body {
 /* заголовки */
 .title {
   text-align: center;
-  margin-bottom: 5px;
-  font-size: 18px;
+  margin: 5px 0;
 }
 
-/* график занимает всё */
+/* canvas */
 canvas {
   flex: 1;
   width: 100% !important;
@@ -71,7 +82,7 @@ canvas {
 
 <div class="screen">
 
-<div class="header">📊 Админ панель (LIVE результаты)</div>
+<div class="header">📊 Админ панель (LIVE)</div>
 
 <div class="content">
 
@@ -104,10 +115,6 @@ const chart1 = new Chart(document.getElementById("c1"), {
       data: [0,0,0,0,0],
       backgroundColor: "#3b82f6"
     }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false
   }
 });
 
@@ -120,10 +127,6 @@ const chart2 = new Chart(document.getElementById("c2"), {
       data: [0,0,0,0,0],
       backgroundColor: "#22c55e"
     }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false
   }
 });
 
@@ -134,17 +137,11 @@ db.ref("votes").on("value", snap => {
   const d2 = [0,0,0,0,0];
 
   if (data.dyugo) {
-    Object.values(data.dyugo).forEach(v => {
-      const i = parseInt(v) - 1;
-      if (d1[i] !== undefined) d1[i]++;
-    });
+    Object.values(data.dyugo).forEach(v => d1[v-1]++);
   }
 
   if (data.boom) {
-    Object.values(data.boom).forEach(v => {
-      const i = parseInt(v) - 1;
-      if (d2[i] !== undefined) d2[i]++;
-    });
+    Object.values(data.boom).forEach(v => d2[v-1]++);
   }
 
   chart1.data.datasets[0].data = d1;
