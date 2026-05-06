@@ -47,27 +47,27 @@ html, body {
 /* колонки */
 .box {
   width: 50%;
-  display: flex;
-  flex-direction: column;
   padding: 10px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 /* заголовок */
 .title {
   text-align: center;
   margin-bottom: 10px;
-  font-size: 16px;
   color: white;
 }
 
-/* 🔥 ВАЖНО: контейнер вместо фиксированной высоты */
-.chart-box {
-  flex: 1;
+/* 🔥 ГЛАВНЫЙ ФИКС: пропорциональный контейнер */
+.chart-container {
   position: relative;
+  width: 100%;
+  flex: 1;
 }
 
-/* canvas занимает всё */
+/* canvas НЕ растягиваем */
 canvas {
   width: 100% !important;
   height: 100% !important;
@@ -85,14 +85,14 @@ canvas {
 
   <div class="box">
     <div class="title">ДЮГО</div>
-    <div class="chart-box">
+    <div class="chart-container">
       <canvas id="c1"></canvas>
     </div>
   </div>
 
   <div class="box">
     <div class="title">БУМ</div>
-    <div class="chart-box">
+    <div class="chart-container">
       <canvas id="c2"></canvas>
     </div>
   </div>
@@ -109,21 +109,16 @@ canvas {
 <script>
 const options = {
   responsive: true,
-  maintainAspectRatio: false, // 🔥 ключ — убирает растяжение текста
+  maintainAspectRatio: true, // 🔥 КЛЮЧ: включаем правильное соотношение
+  aspectRatio: 1.6,          // 🔥 фикс пропорции (убирает “вытягивание”)
   plugins: {
     legend: {
-      labels: {
-        color: "white"
-      }
+      labels: { color: "white" }
     }
   },
   scales: {
-    x: {
-      ticks: { color: "white" }
-    },
-    y: {
-      ticks: { color: "white" }
-    }
+    x: { ticks: { color: "white" } },
+    y: { ticks: { color: "white" } }
   }
 };
 
