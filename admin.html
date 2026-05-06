@@ -12,7 +12,6 @@ html, body {
   padding: 0;
   background: #0f172a;
   font-family: Arial;
-
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -24,10 +23,10 @@ body {
   align-items: center;
 }
 
-/* 🔥 ТОЛЬКО ШИРИНУ УВЕЛИЧИЛИ */
+/* окно */
 .screen {
-  width: 1200px;  /* было 1150 */
-  height: 720px;  /* как ты хотела вернуть */
+  width: 1200px;
+  height: 720px;
   background: #0b1226;
   border-radius: 16px;
   overflow: hidden;
@@ -35,6 +34,7 @@ body {
   flex-direction: column;
 }
 
+/* верх */
 .header {
   text-align: center;
   padding: 10px;
@@ -43,32 +43,36 @@ body {
   color: white;
 }
 
+/* 🔥 УВЕЛИЧИВАЕМ ПРОСТРАНСТВО ДЛЯ ГРАФИКОВ */
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 20px; /* было 0 → стало шире */
+  padding: 10px;
   height: 100%;
+  box-sizing: border-box;
 }
 
 .box {
-  padding: 10px;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }
 
+/* заголовок */
 .title {
   text-align: center;
   margin-bottom: 10px;
   color: white;
 }
 
-/* графики */
+/* 🔥 ГРАФИКИ ШИРЕ И ВЫШЕ */
 .chart-area {
+  flex: 1;
   width: 100%;
-  height: 620px;
   position: relative;
 }
 
+/* canvas */
 canvas {
   position: absolute;
   inset: 0;
