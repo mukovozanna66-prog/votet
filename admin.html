@@ -114,7 +114,13 @@ const baseColor2 = "#22c55e";
 const options = {
   responsive: true,
   maintainAspectRatio: false,
-  animation: false,
+
+  // 🔥 ПЛАВНАЯ АНИМАЦИЯ
+  animation: {
+    duration: 700,
+    easing: "easeOutQuart"
+  },
+
   plugins: {
     legend: {
       labels: { color: "white" }
@@ -157,6 +163,8 @@ function makeColors(data, baseColor) {
   return data.map(v => (v === max && max > 0 ? leaderColor : baseColor));
 }
 
+let updateTimeout;
+
 db.ref("votes").on("value", snap => {
   const data = snap.val() || {};
 
@@ -171,14 +179,21 @@ db.ref("votes").on("value", snap => {
     Object.values(data.boom).forEach(v => d2[v - 1]++);
   }
 
-  chart1.data.datasets[0].data = d1;
-  chart2.data.datasets[0].data = d2;
+  // 🔥 небольшая задержка = плавность без дёрганий
+  clearTimeout(updateTimeout);
 
-  chart1.data.datasets[0].backgroundColor = makeColors(d1, baseColor1);
-  chart2.data.datasets[0].backgroundColor = makeColors(d2, baseColor2);
+  updateTimeout = setTimeout(() => {
 
-  chart1.update();
-  chart2.update();
+    chart1.data.datasets[0].data = d1;
+    chart2.data.datasets[0].data = d2;
+
+    chart1.data.datasets[0].backgroundColor = makeColors(d1, baseColor1);
+    chart2.data.datasets[0].backgroundColor = makeColors(d2, baseColor2);
+
+    chart1.update();
+    chart2.update();
+
+  }, 120); // сглаживание смены лидера
 });
 </script>
 
