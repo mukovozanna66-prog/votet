@@ -23,7 +23,6 @@ body {
   align-items: center;
 }
 
-/* окно */
 .screen {
   width: 1200px;
   height: 720px;
@@ -34,7 +33,6 @@ body {
   flex-direction: column;
 }
 
-/* верх */
 .header {
   text-align: center;
   padding: 10px;
@@ -43,11 +41,10 @@ body {
   color: white;
 }
 
-/* 🔥 УВЕЛИЧИВАЕМ ПРОСТРАНСТВО ДЛЯ ГРАФИКОВ */
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px; /* было 0 → стало шире */
+  gap: 20px;
   padding: 10px;
   height: 100%;
   box-sizing: border-box;
@@ -58,21 +55,17 @@ body {
   flex-direction: column;
 }
 
-/* заголовок */
 .title {
   text-align: center;
   margin-bottom: 10px;
   color: white;
 }
 
-/* 🔥 ГРАФИКИ ШИРЕ И ВЫШЕ */
 .chart-area {
   flex: 1;
-  width: 100%;
   position: relative;
 }
 
-/* canvas */
 canvas {
   position: absolute;
   inset: 0;
@@ -114,6 +107,10 @@ canvas {
 <script src="firebase.js"></script>
 
 <script>
+const baseColor1 = "#3b82f6";
+const baseColor2 = "#22c55e";
+const leaderColor = "#facc15"; // 🟡 лидер
+
 const options = {
   responsive: true,
   maintainAspectRatio: false,
@@ -133,7 +130,7 @@ const chart1 = new Chart(document.getElementById("c1"), {
     datasets: [{
       label: "ДЮГО",
       data: [0,0,0,0,0],
-      backgroundColor: "#3b82f6"
+      backgroundColor: baseColor1
     }]
   },
   options
@@ -146,11 +143,16 @@ const chart2 = new Chart(document.getElementById("c2"), {
     datasets: [{
       label: "БУМ",
       data: [0,0,0,0,0],
-      backgroundColor: "#22c55e"
+      backgroundColor: baseColor2
     }]
   },
   options
 });
+
+function highlightLeader(dataArray, baseColor) {
+  const max = Math.max(...dataArray);
+  return dataArray.map(v => v === max && max > 0 ? leaderColor : baseColor);
+}
 
 db.ref("votes").on("value", snap => {
   const data = snap.val() || {};
@@ -168,6 +170,10 @@ db.ref("votes").on("value", snap => {
 
   chart1.data.datasets[0].data = d1;
   chart2.data.datasets[0].data = d2;
+
+  // 🔥 подсветка лидера
+  chart1.data.datasets[0].backgroundColor = highlightLeader(d1, baseColor1);
+  chart2.data.datasets[0].backgroundColor = highlightLeader(d2, baseColor2);
 
   chart1.update();
   chart2.update();
