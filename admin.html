@@ -18,7 +18,7 @@ html, body {
   align-items: center;
 }
 
-/* окно */
+/* фикс окно */
 .screen {
   width: 1000px;
   height: 600px;
@@ -53,22 +53,24 @@ html, body {
   flex-direction: column;
 }
 
-/* заголовок */
+/* название */
 .title {
   text-align: center;
   margin-bottom: 10px;
   color: white;
 }
 
-/* 🔥 ГЛАВНЫЙ ФИКС: пропорциональный контейнер */
-.chart-container {
-  position: relative;
+/* 🔥 ГЛАВНЫЙ ФИКС */
+.chart-wrap {
   width: 100%;
-  flex: 1;
+  aspect-ratio: 16 / 10; /* ключ: фикс пропорции */
+  position: relative;
 }
 
-/* canvas НЕ растягиваем */
+/* canvas строго в контейнер */
 canvas {
+  position: absolute;
+  inset: 0;
   width: 100% !important;
   height: 100% !important;
 }
@@ -85,14 +87,14 @@ canvas {
 
   <div class="box">
     <div class="title">ДЮГО</div>
-    <div class="chart-container">
+    <div class="chart-wrap">
       <canvas id="c1"></canvas>
     </div>
   </div>
 
   <div class="box">
     <div class="title">БУМ</div>
-    <div class="chart-container">
+    <div class="chart-wrap">
       <canvas id="c2"></canvas>
     </div>
   </div>
@@ -109,8 +111,7 @@ canvas {
 <script>
 const options = {
   responsive: true,
-  maintainAspectRatio: true, // 🔥 КЛЮЧ: включаем правильное соотношение
-  aspectRatio: 1.6,          // 🔥 фикс пропорции (убирает “вытягивание”)
+  maintainAspectRatio: false, // важно!
   plugins: {
     legend: {
       labels: { color: "white" }
