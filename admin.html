@@ -107,15 +107,18 @@ canvas {
 <script src="firebase.js"></script>
 
 <script>
+const leaderColor = "#facc15";
 const baseColor1 = "#3b82f6";
 const baseColor2 = "#22c55e";
-const leaderColor = "#facc15"; // 🟡 лидер
 
 const options = {
   responsive: true,
   maintainAspectRatio: false,
+  animation: false,
   plugins: {
-    legend: { labels: { color: "white" } }
+    legend: {
+      labels: { color: "white" }
+    }
   },
   scales: {
     x: { ticks: { color: "white" } },
@@ -130,7 +133,7 @@ const chart1 = new Chart(document.getElementById("c1"), {
     datasets: [{
       label: "ДЮГО",
       data: [0,0,0,0,0],
-      backgroundColor: baseColor1
+      backgroundColor: []
     }]
   },
   options
@@ -143,15 +146,15 @@ const chart2 = new Chart(document.getElementById("c2"), {
     datasets: [{
       label: "БУМ",
       data: [0,0,0,0,0],
-      backgroundColor: baseColor2
+      backgroundColor: []
     }]
   },
   options
 });
 
-function highlightLeader(dataArray, baseColor) {
-  const max = Math.max(...dataArray);
-  return dataArray.map(v => v === max && max > 0 ? leaderColor : baseColor);
+function makeColors(data, baseColor) {
+  const max = Math.max(...data);
+  return data.map(v => (v === max && max > 0 ? leaderColor : baseColor));
 }
 
 db.ref("votes").on("value", snap => {
@@ -161,19 +164,18 @@ db.ref("votes").on("value", snap => {
   const d2 = [0,0,0,0,0];
 
   if (data.dyugo) {
-    Object.values(data.dyugo).forEach(v => d1[v-1]++);
+    Object.values(data.dyugo).forEach(v => d1[v - 1]++);
   }
 
   if (data.boom) {
-    Object.values(data.boom).forEach(v => d2[v-1]++);
+    Object.values(data.boom).forEach(v => d2[v - 1]++);
   }
 
   chart1.data.datasets[0].data = d1;
   chart2.data.datasets[0].data = d2;
 
-  // 🔥 подсветка лидера
-  chart1.data.datasets[0].backgroundColor = highlightLeader(d1, baseColor1);
-  chart2.data.datasets[0].backgroundColor = highlightLeader(d2, baseColor2);
+  chart1.data.datasets[0].backgroundColor = makeColors(d1, baseColor1);
+  chart2.data.datasets[0].backgroundColor = makeColors(d2, baseColor2);
 
   chart1.update();
   chart2.update();
