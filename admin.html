@@ -18,7 +18,7 @@ html, body {
   align-items: center;
 }
 
-/* ФИКСИРОВАННОЕ ОКНО */
+/* фиксированное окно */
 .screen {
   width: 1000px;
   height: 600px;
@@ -27,7 +27,7 @@ html, body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
 
 /* верх */
@@ -41,7 +41,7 @@ html, body {
 /* контейнер */
 .content {
   display: flex;
-  height: 100%;
+  flex: 1;
 }
 
 /* колонки */
@@ -53,16 +53,17 @@ html, body {
   box-sizing: border-box;
 }
 
-/* заголовки */
+/* заголовок */
 .title {
   text-align: center;
   margin-bottom: 10px;
+  font-size: 16px;
 }
 
-/* ВАЖНО: фиксируем высоту графика */
+/* canvas БЕЗ растяжения текста */
 canvas {
   width: 100% !important;
-  height: 450px !important;
+  height: 100% !important;
 }
 </style>
 </head>
@@ -71,7 +72,7 @@ canvas {
 
 <div class="screen">
 
-<div class="header">📊 Админ панель (LIVE)</div>
+<div class="header">📊 LIVE АДМИН ПАНЕЛЬ</div>
 
 <div class="content">
 
@@ -95,6 +96,36 @@ canvas {
 <script src="firebase.js"></script>
 
 <script>
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      labels: {
+        font: {
+          size: 14
+        }
+      }
+    }
+  },
+  scales: {
+    x: {
+      ticks: {
+        font: {
+          size: 14
+        }
+      }
+    },
+    y: {
+      ticks: {
+        font: {
+          size: 14
+        }
+      }
+    }
+  }
+};
+
 const chart1 = new Chart(document.getElementById("c1"), {
   type: "bar",
   data: {
@@ -105,10 +136,7 @@ const chart1 = new Chart(document.getElementById("c1"), {
       backgroundColor: "#3b82f6"
     }]
   },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false
-  }
+  options: chartOptions
 });
 
 const chart2 = new Chart(document.getElementById("c2"), {
@@ -121,10 +149,7 @@ const chart2 = new Chart(document.getElementById("c2"), {
       backgroundColor: "#22c55e"
     }]
   },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false
-  }
+  options: chartOptions
 });
 
 db.ref("votes").on("value", snap => {
@@ -134,11 +159,17 @@ db.ref("votes").on("value", snap => {
   const d2 = [0,0,0,0,0];
 
   if (data.dyugo) {
-    Object.values(data.dyugo).forEach(v => d1[v-1]++);
+    Object.values(data.dyugo).forEach(v => {
+      const i = parseInt(v) - 1;
+      if (d1[i] !== undefined) d1[i]++;
+    });
   }
 
   if (data.boom) {
-    Object.values(data.boom).forEach(v => d2[v-1]++);
+    Object.values(data.boom).forEach(v => {
+      const i = parseInt(v) - 1;
+      if (d2[i] !== undefined) d2[i]++;
+    });
   }
 
   chart1.data.datasets[0].data = d1;
