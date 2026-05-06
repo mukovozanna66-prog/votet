@@ -7,18 +7,26 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
+/* 🔥 ГЛАВНЫЙ ФИКС */
 html, body {
   margin: 0;
   padding: 0;
   background: #0f172a;
   font-family: Arial;
-  height: 100%;
+
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; /* ❗ запрещаем прокрутку */
+}
+
+/* центрируем */
+body {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* фикс окно */
+/* окно */
 .screen {
   width: 1000px;
   height: 600px;
@@ -38,36 +46,36 @@ html, body {
   color: white;
 }
 
-/* контент */
-.content {
-  display: flex;
-  flex: 1;
+/* сетка */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100%;
 }
 
-/* колонки */
+/* блок */
 .box {
-  width: 50%;
   padding: 10px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }
 
-/* название */
+/* заголовок */
 .title {
   text-align: center;
   margin-bottom: 10px;
   color: white;
 }
 
-/* 🔥 ГЛАВНЫЙ ФИКС */
-.chart-wrap {
+/* 🔥 фиксируем ТОЛЬКО область графика */
+.chart-area {
   width: 100%;
-  aspect-ratio: 16 / 10; /* ключ: фикс пропорции */
+  height: 520px;
   position: relative;
 }
 
-/* canvas строго в контейнер */
+/* canvas */
 canvas {
   position: absolute;
   inset: 0;
@@ -83,18 +91,18 @@ canvas {
 
 <div class="header">📊 LIVE АДМИН ПАНЕЛЬ</div>
 
-<div class="content">
+<div class="grid">
 
   <div class="box">
     <div class="title">ДЮГО</div>
-    <div class="chart-wrap">
+    <div class="chart-area">
       <canvas id="c1"></canvas>
     </div>
   </div>
 
   <div class="box">
     <div class="title">БУМ</div>
-    <div class="chart-wrap">
+    <div class="chart-area">
       <canvas id="c2"></canvas>
     </div>
   </div>
@@ -111,11 +119,9 @@ canvas {
 <script>
 const options = {
   responsive: true,
-  maintainAspectRatio: false, // важно!
+  maintainAspectRatio: false,
   plugins: {
-    legend: {
-      labels: { color: "white" }
-    }
+    legend: { labels: { color: "white" } }
   },
   scales: {
     x: { ticks: { color: "white" } },
