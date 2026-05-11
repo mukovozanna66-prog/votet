@@ -10,8 +10,14 @@ body {
   margin: 0;
   font-family: Arial;
 
-  /* 🔥 ФОН */
-  background: url("fon.png") center/cover no-repeat fixed;
+  /* 🔥 ТЕМНО-ЗЕЛЕНИЙ ГРАДІЄНТ */
+  background:
+    linear-gradient(
+      180deg,
+      #0b2e26 0%,
+      #103b31 50%,
+      #0a241f 100%
+    );
 
   color: white;
 }
@@ -29,20 +35,20 @@ h2 {
   margin-bottom: 20px;
   font-size: 26px;
 
-  /* затемнение текста */
-  text-shadow: 0 0 10px rgba(0,0,0,0.7);
+  text-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
 /* карточки */
 .card {
   background: rgba(17, 24, 39, 0.85);
-  backdrop-filter: blur(5px);
 
   padding: 15px;
   border-radius: 15px;
   margin-bottom: 15px;
 
   border: 1px solid rgba(255,255,255,0.08);
+
+  backdrop-filter: blur(5px);
 }
 
 /* заголовки категорий */
@@ -51,7 +57,7 @@ h2 {
   text-align: center;
   font-size: 22px;
 
-  text-shadow: 0 0 10px rgba(0,0,0,0.6);
+  text-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
 /* варианты */
@@ -64,6 +70,7 @@ h2 {
 
   border-radius: 10px;
   text-align: center;
+
   cursor: pointer;
   font-size: 18px;
 
@@ -88,6 +95,7 @@ input[type="radio"]:checked + label {
 button {
   width: 100%;
   padding: 15px;
+
   font-size: 20px;
 
   border: none;
@@ -115,6 +123,7 @@ button:hover {
 <h2>🗳 ТАЄМНЕ ОНЛАЙН-ГОЛОСУВАННЯ</h2>
 
 <div class="card">
+
 <h3>Президент ДЮГО</h3>
 
 <input type="radio" name="dyugo" id="d1" value="1">
@@ -135,6 +144,7 @@ button:hover {
 </div>
 
 <div class="card">
+
 <h3>ЛІДЕР БУМ</h3>
 
 <input type="radio" name="boom" id="b1" value="1">
@@ -167,7 +177,10 @@ button:hover {
 let deviceId = localStorage.getItem("deviceId");
 
 if (!deviceId) {
-  deviceId = Math.random().toString(36).substring(2) + Date.now();
+  deviceId =
+    Math.random().toString(36).substring(2)
+    + Date.now();
+
   localStorage.setItem("deviceId", deviceId);
 }
 
@@ -184,7 +197,8 @@ function vote() {
     return;
   }
 
-  const userRef = db.ref("voted/" + deviceId);
+  const userRef =
+    db.ref("voted/" + deviceId);
 
   userRef.once("value").then(snapshot => {
 
@@ -194,6 +208,7 @@ function vote() {
     }
 
     db.ref("votes/dyugo").push(dyugo.value);
+
     db.ref("votes/boom").push(boom.value);
 
     userRef.set(true);
