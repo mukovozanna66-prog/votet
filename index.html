@@ -13,20 +13,17 @@ body {
   color: white;
 }
 
-/* контейнер приложения */
 .app {
   max-width: 500px;
   margin: auto;
   padding: 15px;
 }
 
-/* заголовок */
 h2 {
   text-align: center;
   margin-bottom: 15px;
 }
 
-/* блок категории */
 .card {
   background: #111827;
   padding: 15px;
@@ -34,13 +31,11 @@ h2 {
   margin-bottom: 15px;
 }
 
-/* заголовок категории */
 .card h3 {
   margin: 0 0 10px 0;
   text-align: center;
 }
 
-/* кнопки-радио как большие плитки */
 .option {
   display: block;
   padding: 12px;
@@ -57,17 +52,14 @@ h2 {
   background: #374151;
 }
 
-/* скрываем radio */
 input[type="radio"] {
   display: none;
 }
 
-/* выбранная кнопка */
 input[type="radio"]:checked + label {
   background: #3b82f6;
 }
 
-/* кнопка голосования */
 button {
   width: 100%;
   padding: 15px;
@@ -135,7 +127,6 @@ button:hover {
 
 </div>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script src="firebase.js"></script>
@@ -160,7 +151,6 @@ function vote() {
   const userRef = db.ref("voted/" + deviceId);
 
   userRef.once("value").then(snapshot => {
-
     if (snapshot.exists()) {
       alert("Ты уже голосовал ❌");
       return;
