@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Голосование</title>
+<title>ТАЄМНЕ ОНЛАЙН-ГОЛОСУВАННЯ</title>
 
 <style>
 body {
@@ -21,7 +21,8 @@ body {
 
 h2 {
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  font-size: 26px;
 }
 
 .card {
@@ -32,8 +33,9 @@ h2 {
 }
 
 .card h3 {
-  margin: 0 0 10px 0;
+  margin: 0 0 15px 0;
   text-align: center;
+  font-size: 22px;
 }
 
 .option {
@@ -63,12 +65,13 @@ input[type="radio"]:checked + label {
 button {
   width: 100%;
   padding: 15px;
-  font-size: 18px;
+  font-size: 20px;
   border: none;
   border-radius: 12px;
   background: #22c55e;
   color: white;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 button:hover {
@@ -81,10 +84,10 @@ button:hover {
 
 <div class="app">
 
-<h2>🗳 Голосование</h2>
+<h2>🗳 ТАЄМНЕ ОНЛАЙН-ГОЛОСУВАННЯ</h2>
 
 <div class="card">
-<h3>ДЮГО</h3>
+<h3>Президент ДЮГО</h3>
 
 <input type="radio" name="dyugo" id="d1" value="1">
 <label class="option" for="d1">Марія Деканенко</label>
@@ -104,7 +107,7 @@ button:hover {
 </div>
 
 <div class="card">
-<h3>БУМ</h3>
+<h3>ЛІДЕР БУМ</h3>
 
 <input type="radio" name="boom" id="b1" value="1">
 <label class="option" for="b1">Марія Деканенко</label>
@@ -123,7 +126,7 @@ button:hover {
 
 </div>
 
-<button onclick="vote()">Голосовать</button>
+<button onclick="vote()">Голосувати</button>
 
 </div>
 
@@ -144,15 +147,16 @@ function vote() {
   const boom = document.querySelector('input[name="boom"]:checked');
 
   if (!dyugo || !boom) {
-    alert("Выбери обе категории");
+    alert("Оберіть обидві категорії");
     return;
   }
 
   const userRef = db.ref("voted/" + deviceId);
 
   userRef.once("value").then(snapshot => {
+
     if (snapshot.exists()) {
-      alert("Ты уже голосовал ❌");
+      alert("Ви вже голосували ❌");
       return;
     }
 
@@ -161,7 +165,7 @@ function vote() {
 
     userRef.set(true);
 
-    alert("Голос засчитан ✅");
+    alert("Голос зараховано ✅");
   });
 }
 </script>
