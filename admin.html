@@ -101,7 +101,6 @@ canvas {
 
 </div>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script src="firebase.js"></script>
@@ -114,28 +113,38 @@ const baseColor2 = "#22c55e";
 const options = {
   responsive: true,
   maintainAspectRatio: false,
-
-  // 🔥 ПЛАВНАЯ АНИМАЦИЯ
   animation: {
     duration: 700,
     easing: "easeOutQuart"
   },
-
   plugins: {
     legend: {
       labels: { color: "white" }
     }
   },
   scales: {
-    x: { ticks: { color: "white" } },
-    y: { ticks: { color: "white" } }
+    x: {
+      ticks: {
+        color: "white",
+        font: { size: 12 }
+      }
+    },
+    y: {
+      ticks: { color: "white" }
+    }
   }
 };
 
 const chart1 = new Chart(document.getElementById("c1"), {
   type: "bar",
   data: {
-    labels: ["1","2","3","4","5"],
+    labels: [
+      "Марія Деканенко",
+      "Денис Онищенко",
+      "Дар'я Бутенко",
+      "Дар'я Литвин",
+      "Аріна Давиденко"
+    ],
     datasets: [{
       label: "ДЮГО",
       data: [0,0,0,0,0],
@@ -148,7 +157,13 @@ const chart1 = new Chart(document.getElementById("c1"), {
 const chart2 = new Chart(document.getElementById("c2"), {
   type: "bar",
   data: {
-    labels: ["1","2","3","4","5"],
+    labels: [
+      "Марія Деканенко",
+      "Денис Онищенко",
+      "Дар'я Бутенко",
+      "Дар'я Литвин",
+      "Аріна Давиденко"
+    ],
     datasets: [{
       label: "БУМ",
       data: [0,0,0,0,0],
@@ -172,18 +187,20 @@ db.ref("votes").on("value", snap => {
   const d2 = [0,0,0,0,0];
 
   if (data.dyugo) {
-    Object.values(data.dyugo).forEach(v => d1[v - 1]++);
+    Object.values(data.dyugo).forEach(v => {
+      d1[v - 1]++;
+    });
   }
 
   if (data.boom) {
-    Object.values(data.boom).forEach(v => d2[v - 1]++);
+    Object.values(data.boom).forEach(v => {
+      d2[v - 1]++;
+    });
   }
 
-  // 🔥 небольшая задержка = плавность без дёрганий
   clearTimeout(updateTimeout);
 
   updateTimeout = setTimeout(() => {
-
     chart1.data.datasets[0].data = d1;
     chart2.data.datasets[0].data = d2;
 
@@ -192,8 +209,7 @@ db.ref("votes").on("value", snap => {
 
     chart1.update();
     chart2.update();
-
-  }, 120); // сглаживание смены лидера
+  }, 120);
 });
 </script>
 
