@@ -1,226 +1,313 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ТАЄМНЕ ОНЛАЙН-ГОЛОСУВАННЯ</title>
+
+<title>ТАЄМНЕ ГОЛОСУВАННЯ</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: linear-gradient(180deg, #0b2e26 0%, #103b31 50%, #0a241f 100%);
-  color: white;
+
+body{
+    margin:0;
+    padding:20px;
+    font-family:Arial;
+    background:
+    linear-gradient(
+      rgba(0,0,0,0.6),
+      rgba(0,0,0,0.6)
+    ),
+    url("fon.png") center/cover no-repeat fixed;
+
+    color:white;
 }
 
-.app {
-  max-width: 500px;
-  margin: auto;
-  padding: 15px;
+.container{
+    max-width:700px;
+    margin:auto;
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 26px;
+.title{
+    text-align:center;
+    font-size:32px;
+    font-weight:bold;
+    margin-bottom:30px;
 }
 
-.status {
-  text-align: center;
-  margin-bottom: 15px;
-  font-size: 20px;
-  font-weight: bold;
-  color: #facc15;
+.block{
+    background:rgba(17,24,39,0.8);
+    padding:20px;
+    border-radius:20px;
+    margin-bottom:25px;
+    backdrop-filter:blur(5px);
 }
 
-.card {
-  background: rgba(17, 24, 39, 0.85);
-  padding: 15px;
-  border-radius: 15px;
-  margin-bottom: 15px;
+.block h2{
+    text-align:center;
+    margin-top:0;
+    margin-bottom:20px;
 }
 
-.card h3 {
-  margin: 0 0 15px 0;
-  text-align: center;
-  font-size: 22px;
+.buttons{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
 }
 
-.option {
-  display: block;
-  padding: 12px;
-  margin: 8px 0;
-  background: rgba(31, 41, 55, 0.9);
-  border-radius: 10px;
-  text-align: center;
-  cursor: pointer;
-  font-size: 18px;
+button{
+    padding:16px;
+    border:none;
+    border-radius:14px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.2s;
+    color:white;
 }
 
-input[type="radio"] {
-  display: none;
+button:hover{
+    transform:scale(1.02);
 }
 
-input[type="radio"]:checked + label {
-  background: #3b82f6;
+.dyugo button{
+    background:#22c55e;
 }
 
-button {
-  width: 100%;
-  padding: 15px;
-  font-size: 20px;
-  border: none;
-  border-radius: 12px;
-  background: #22c55e;
-  color: white;
-  cursor: pointer;
+.dyugo button:hover{
+    background:#16a34a;
 }
 
-button:disabled {
-  background: #6b7280;
-  cursor: not-allowed;
+.boom button{
+    background:#a855f7;
 }
+
+.boom button:hover{
+    background:#9333ea;
+}
+
+.status{
+    text-align:center;
+    margin-bottom:20px;
+    font-size:22px;
+    font-weight:bold;
+    color:#facc15;
+}
+
+.closed{
+    opacity:0.5;
+    pointer-events:none;
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="container">
 
-<h2>🗳 ТАЄМНЕ ОНЛАЙН-ГОЛОСУВАННЯ</h2>
+<div class="title">
+ТАЄМНЕ ОНЛАЙН-ГОЛОСУВАННЯ
+</div>
 
-<div class="status" id="statusText">Очікування старту</div>
+<div class="status" id="status">
+Голосування триває
+</div>
 
-<div class="card">
-<h3>Президент ДЮГО</h3>
+<!-- ДЮГО -->
 
-<input type="radio" name="dyugo" id="d1" value="1">
-<label class="option" for="d1">Марія Деканенко</label>
+<div class="block dyugo" id="dyugoBlock">
 
-<input type="radio" name="dyugo" id="d2" value="2">
-<label class="option" for="d2">Денис Онищенко</label>
+<h2>
+Президент ДЮГО
+</h2>
 
-<input type="radio" name="dyugo" id="d3" value="3">
-<label class="option" for="d3">Дар'я Бутенко</label>
+<div class="buttons">
 
-<input type="radio" name="dyugo" id="d4" value="4">
-<label class="option" for="d4">Дар'я Литвин</label>
+<button onclick="vote('dyugo',1)">
+Марія Деканенко
+</button>
 
-<input type="radio" name="dyugo" id="d5" value="5">
-<label class="option" for="d5">Аріна Давиденко</label>
+<button onclick="vote('dyugo',2)">
+Денис Онищенко
+</button>
+
+<button onclick="vote('dyugo',3)">
+Дар'я Бутенко
+</button>
+
+<button onclick="vote('dyugo',4)">
+Дар'я Литвин
+</button>
+
+<button onclick="vote('dyugo',5)">
+Аріна Давиденко
+</button>
+
+</div>
+</div>
+
+<!-- БУМ -->
+
+<div class="block boom" id="boomBlock">
+
+<h2>
+Лідер БУМ
+</h2>
+
+<div class="buttons">
+
+<button onclick="vote('boom',1)">
+Марія Деканенко
+</button>
+
+<button onclick="vote('boom',2)">
+Денис Онищенко
+</button>
+
+<button onclick="vote('boom',3)">
+Дар'я Бутенко
+</button>
+
+<button onclick="vote('boom',4)">
+Дар'я Литвин
+</button>
+
+<button onclick="vote('boom',5)">
+Аріна Давиденко
+</button>
+
+</div>
+</div>
 
 </div>
 
-<div class="card">
-<h3>ЛІДЕР БУМ</h3>
-
-<input type="radio" name="boom" id="b1" value="1">
-<label class="option" for="b1">Марія Деканенко</label>
-
-<input type="radio" name="boom" id="b2" value="2">
-<label class="option" for="b2">Денис Онищенко</label>
-
-<input type="radio" name="boom" id="b3" value="3">
-<label class="option" for="b3">Дар'я Бутенко</label>
-
-<input type="radio" name="boom" id="b4" value="4">
-<label class="option" for="b4">Дар'я Литвин</label>
-
-<input type="radio" name="boom" id="b5" value="5">
-<label class="option" for="b5">Аріна Давиденко</label>
-
-</div>
-
-<button id="voteBtn" onclick="vote()" disabled>Голосувати</button>
-
-</div>
+<!-- FIREBASE -->
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
 <script src="firebase.js"></script>
 
 <script>
-let deviceId = localStorage.getItem("deviceId");
 
-if (!deviceId) {
-  deviceId = Math.random().toString(36).substring(2) + Date.now();
-  localStorage.setItem("deviceId", deviceId);
+/* ID ГОЛОСУЮЧОГО */
+
+let voterId = localStorage.getItem("voterId");
+
+if (!voterId) {
+
+    voterId =
+    Date.now()
+    + "_"
+    + Math.random().toString(36).substring(2);
+
+    localStorage.setItem("voterId", voterId);
 }
 
-const voteBtn = document.getElementById("voteBtn");
-const statusText = document.getElementById("statusText");
+/* ГОЛОСУВАННЯ */
 
-let votingIsOpen = false;
-let timerInterval;
+function vote(category, candidate){
 
-db.ref("settings").on("value", snap => {
-  const settings = snap.val() || {};
-  const endTime = settings.endTime;
-  const votingOpen = settings.votingOpen;
+    db.ref("settings/votingOpen")
+    .once("value")
+    .then(settingSnap => {
 
-  clearInterval(timerInterval);
+        const votingOpen = settingSnap.val();
 
-  if (!votingOpen || !endTime) {
-    votingIsOpen = false;
-    voteBtn.disabled = true;
-    statusText.innerText = "Голосування ще не розпочато або завершено";
-    return;
-  }
+        if(votingOpen === false){
 
-  timerInterval = setInterval(() => {
-    const left = endTime - Date.now();
+            alert("Голосування закрито");
+            return;
+        }
 
-    if (left <= 0) {
-      votingIsOpen = false;
-      voteBtn.disabled = true;
-      statusText.innerText = "Голосування завершено";
-      clearInterval(timerInterval);
-      return;
+        const otherCategory =
+        category === "dyugo"
+        ? "boom"
+        : "dyugo";
+
+        /* ПЕРЕВІРКА ІНШОЇ КАТЕГОРІЇ */
+
+        db.ref("votes/" + otherCategory + "/" + voterId)
+        .once("value")
+        .then(otherSnap => {
+
+            const otherVote = otherSnap.val();
+
+            if(otherVote == candidate){
+
+                alert(
+                  "Не можна голосувати за одну й ту саму людину у двох категоріях!"
+                );
+
+                return;
+            }
+
+            /* ПЕРЕВІРКА ПОТОЧНОЇ */
+
+            db.ref("votes/" + category + "/" + voterId)
+            .once("value")
+            .then(mySnap => {
+
+                if(mySnap.exists()){
+
+                    alert(
+                      "Ви вже голосували в цій категорії!"
+                    );
+
+                    return;
+                }
+
+                /* ЗБЕРЕГТИ ГОЛОС */
+
+                db.ref("votes/" + category + "/" + voterId)
+                .set(candidate);
+
+                alert("Голос зараховано!");
+
+            });
+
+        });
+
+    });
+
+}
+
+/* СТАТУС */
+
+db.ref("settings/votingOpen")
+.on("value", snap => {
+
+    const open = snap.val();
+
+    const status =
+    document.getElementById("status");
+
+    const dyugo =
+    document.getElementById("dyugoBlock");
+
+    const boom =
+    document.getElementById("boomBlock");
+
+    if(open === false){
+
+        status.innerText =
+        "Голосування завершено";
+
+        dyugo.classList.add("closed");
+        boom.classList.add("closed");
+
+    }else{
+
+        status.innerText =
+        "Голосування триває";
+
+        dyugo.classList.remove("closed");
+        boom.classList.remove("closed");
     }
 
-    votingIsOpen = true;
-    voteBtn.disabled = false;
-
-    const minutes = Math.floor(left / 1000 / 60);
-    const seconds = Math.floor((left / 1000) % 60);
-
-    statusText.innerText =
-      "До завершення: " +
-      String(minutes).padStart(2, "0") + ":" +
-      String(seconds).padStart(2, "0");
-  }, 1000);
 });
 
-function vote() {
-  if (!votingIsOpen) {
-    alert("Голосування закрите ❌");
-    return;
-  }
-
-  const dyugo = document.querySelector('input[name="dyugo"]:checked');
-  const boom = document.querySelector('input[name="boom"]:checked');
-
-  if (!dyugo || !boom) {
-    alert("Оберіть обидві категорії");
-    return;
-  }
-
-  const userRef = db.ref("voted/" + deviceId);
-
-  userRef.once("value").then(snapshot => {
-    if (snapshot.exists()) {
-      alert("Ви вже голосували ❌");
-      return;
-    }
-
-    db.ref("votes/dyugo").push(dyugo.value);
-    db.ref("votes/boom").push(boom.value);
-
-    userRef.set(true);
-
-    alert("Голос зараховано ✅");
-  });
-}
 </script>
 
 </body>
