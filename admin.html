@@ -210,8 +210,8 @@ canvas {
 const leaderColor = "#facc15";
 
 /* 🔥 КОЛЬОРИ */
-const baseColor1 = "#22c55e"; // зелений
-const baseColor2 = "#a855f7"; // фіолетовий
+const baseColor1 = "#22c55e";
+const baseColor2 = "#a855f7";
 
 const options = {
 
@@ -348,12 +348,20 @@ function makeColors(data, baseColor) {
 
 let updateTimeout;
 
-db.ref("votes").on("value", snap => {
+/* 🔥 ГОЛОСИ + TESTVOTES */
 
-  const data = snap.val() || {};
+db.ref("/").on("value", snap => {
+
+  const root = snap.val() || {};
+
+  const data = root.votes || {};
+
+  const testData = root.testVotes || {};
 
   const d1 = [0,0,0,0,0];
   const d2 = [0,0,0,0,0];
+
+  /* ДЮГО */
 
   if (data.dyugo) {
 
@@ -365,9 +373,35 @@ db.ref("votes").on("value", snap => {
 
   }
 
+  /* TEST ДЮГО */
+
+  if (testData.dyugo) {
+
+    Object.values(testData.dyugo).forEach(v => {
+
+      d1[v - 1]++;
+
+    });
+
+  }
+
+  /* БУМ */
+
   if (data.boom) {
 
     Object.values(data.boom).forEach(v => {
+
+      d2[v - 1]++;
+
+    });
+
+  }
+
+  /* TEST БУМ */
+
+  if (testData.boom) {
+
+    Object.values(testData.boom).forEach(v => {
 
       d2[v - 1]++;
 
