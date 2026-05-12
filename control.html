@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ТАЄМНЕ ОНЛАЙН-ГОЛОСУВАННЯ</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:linear-gradient(180deg,#0b2e26 0%,#103b31 50%,#0a241f 100%);
+  color:white;
+}
+
+.app{
+  max-width:500px;
+  margin:auto;
+  padding:15px;
+}
+
+h2{
+  text-align:center;
+  margin-bottom:20px;
+  font-size:26px;
+}
+
+.status{
+  text-align:center;
+  margin-bottom:15px;
+  font-size:20px;
+  font-weight:bold;
+  color:#facc15;
+}
+
+.card{
+  background:rgba(17,24,39,0.85);
+  padding:15px;
+  border-radius:15px;
+  margin-bottom:15px;
+}
+
+.card h3{
+  margin:0 0 15px 0;
+  text-align:center;
+  font-size:22px;
+}
+
+.person{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(31,41,55,0.9);
+  padding:12px;
+  border-radius:10px;
+  margin:10px 0;
+  font-size:18px;
+}
+
+.voteBtnMini{
+  border:none;
+  background:#22c55e;
+  color:white;
+  padding:10px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:16px;
+}
+
+.voteBtnMini:hover{
+  background:#16a34a;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<h2>🗳 ТАЄМНЕ ОНЛАЙН-ГОЛОСУВАННЯ</h2>
+
+<div class="status" id="statusText">
+Очікування старту
+</div>
+
+<div class="card">
+
+<h3>Президент ДЮГО</h3>
+
+<div class="person">
+<span>Марія Деканенко</span>
+<button class="voteBtnMini" onclick="voteDyugo(1)">
+Голосувати
+</button>
+</div>
+
+<div class="person">
+<span>Денис Онищенко</span>
+<button class="voteBtnMini" onclick="voteDyugo(2)">
+Голосувати
+</button>
+</div>
+
+<div class="person">
+<span>Дар'я Бутенко</span>
+<button class="voteBtnMini" onclick="voteDyugo(3)">
+Голосувати
+</button>
+</div>
+
+<div class="person">
+<span>Дар'я Литвин</span>
+<button class="voteBtnMini" onclick="voteDyugo(4)">
+Голосувати
+</button>
+</div>
+
+<div class="person">
+<span>Аріна Давиденко</span>
+<button class="voteBtnMini" onclick="voteDyugo(5)">
+Голосувати
+</button>
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>ЛІДЕР БУМ</h3>
+
+<div class="person">
+<span>Марія Деканенко</span>
+<button class="voteBtnMini" onclick="voteBoom(1)">
+Голосувати
+</button>
+</div>
+
+<div class="person">
+<span>Денис Онищенко</span>
+<button class="voteBtnMini" onclick="voteBoom(2)">
+Голосувати
+</button>
+</div>
+
+<div class="person">
+<span>Дар'я Бутенко</span>
+<button class="voteBtnMini" onclick="voteBoom(3)">
+Голосувати
+</button>
+</div>
+
+<div class="person">
+<span>Дар'я Литвин</span>
+<button class="voteBtnMini" onclick="voteBoom(4)">
+Голосувати
+</button>
+</div>
+
+<div class="person">
+<span>Аріна Давиденко</span>
+<button class="voteBtnMini" onclick="voteBoom(5)">
+Голосувати
+</button>
+</div>
+
+</div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script src="firebase.js"></script>
+
+<script>
+const statusText = document.getElementById("statusText");
+
+let votingIsOpen = false;
+let timerInterval;
+
+db.ref("settings").on("value", snap => {
+
+  const settings = snap.val() || {};
+  const endTime = settings.endTime;
+  const votingOpen = settings.votingOpen;
+
+  clearInterval(timerInterval);
+
+  if (!votingOpen || !endTime) {
+
+    votingIsOpen = false;
+
+    statusText.innerText =
+      "Голосування ще не розпочато або завершено";
+
+    return;
+  }
+
+  timerInterval = setInterval(() => {
+
+    const left = endTime - Date.now();
+
+    if (left <= 0) {
+
+      votingIsOpen = false;
+
+      statusText.innerText =
+        "Голосування завершено";
+
+      clearInterval(timerInterval);
+
+      return;
+    }
+
+    votingIsOpen = true;
+
+    const minutes =
+      Math.floor(left / 1000 / 60);
+
+    const seconds =
+      Math.floor((left / 1000) % 60);
+
+    statusText.innerText =
+      "До завершення: " +
+      String(minutes).padStart(2, "0") +
+      ":" +
+      String(seconds).padStart(2, "0");
+
+  }, 1000);
+});
+
+function voteDyugo(candidate){
+
+  if(!votingIsOpen){
+    alert("Голосування закрите ❌");
+    return;
+  }
+
+  db.ref("votes/dyugo").push(candidate);
+
+  alert("Голос зараховано ✅");
+}
+
+function voteBoom(candidate){
+
+  if(!votingIsOpen){
+    alert("Голосування закрите ❌");
+    return;
+  }
+
+  db.ref("votes/boom").push(candidate);
+
+  alert("Голос зараховано ✅");
+}
+</script>
+
+</body>
+</html>
