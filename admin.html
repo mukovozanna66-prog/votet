@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Админ панель</title>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
@@ -11,7 +12,7 @@ html, body {
   margin: 0;
   padding: 0;
 
-  /* 🔥 ФОН + СЕРЕДНЄ ЗАТЕМНЕННЯ */
+  /* 🔥 ФОН + ЗАТЕМНЕННЯ */
   background:
   linear-gradient(
     rgba(0,0,0,0.55),
@@ -20,8 +21,10 @@ html, body {
   url("fon.png") center/cover no-repeat fixed;
 
   font-family: Arial;
+
   width: 100vw;
   height: 100vh;
+
   overflow: hidden;
 }
 
@@ -35,9 +38,10 @@ body {
   width: 1200px;
   height: 720px;
 
-  background: rgba(11, 18, 38, 0.88);
+  background: rgba(11, 18, 38, 0.55);
 
-  border-radius: 16px;
+  border-radius: 20px;
+
   overflow: hidden;
 
   display: flex;
@@ -48,12 +52,17 @@ body {
 
 .header {
   text-align: center;
-  padding: 10px;
-  font-size: 18px;
 
-  background: rgba(17, 24, 39, 0.9);
+  padding: 12px;
+
+  font-size: 20px;
+  font-weight: bold;
+
+  background: rgba(17, 24, 39, 0.85);
 
   color: white;
+
+  letter-spacing: 1px;
 }
 
 .grid {
@@ -61,24 +70,46 @@ body {
 
   grid-template-columns: 1fr 1fr;
 
-  gap: 20px;
-  padding: 10px;
+  gap: 28px;
+
+  padding: 20px;
 
   height: 100%;
+
   box-sizing: border-box;
 }
 
+/* 🔥 ОКРЕМІ СЕКЦІЇ */
 .box {
   display: flex;
   flex-direction: column;
+
+  background: rgba(17, 24, 39, 0.78);
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  border-radius: 18px;
+
+  padding: 15px;
+
+  backdrop-filter: blur(6px);
+
+  box-shadow:
+    0 0 20px rgba(0,0,0,0.25);
 }
 
 .title {
   text-align: center;
+
   margin-bottom: 10px;
+
   color: white;
 
-  font-size: 22px;
+  font-size: 24px;
+  font-weight: bold;
+
+  text-shadow:
+    0 0 10px rgba(0,0,0,0.5);
 }
 
 .chart-area {
@@ -109,7 +140,7 @@ canvas {
   <div class="box">
 
     <div class="title">
-      ДЮГО
+      Президент ДЮГО
     </div>
 
     <div class="chart-area">
@@ -121,7 +152,7 @@ canvas {
   <div class="box">
 
     <div class="title">
-      БУМ
+      Лідер БУМ
     </div>
 
     <div class="chart-area">
@@ -174,6 +205,7 @@ const options = {
 
       ticks: {
         color: "white",
+
         font: {
           size: 12
         }
@@ -222,7 +254,7 @@ new Chart(document.getElementById("c1"), {
 
     datasets: [{
 
-      label: "ДЮГО",
+      label: "Президент ДЮГО",
 
       data: [0,0,0,0,0],
 
@@ -253,7 +285,7 @@ new Chart(document.getElementById("c2"), {
 
     datasets: [{
 
-      label: "БУМ",
+      label: "Лідер БУМ",
 
       data: [0,0,0,0,0],
 
