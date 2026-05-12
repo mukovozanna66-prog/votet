@@ -9,109 +9,76 @@
 body {
   margin: 0;
   font-family: Arial;
-
-  /* 🔥 ТЕМНО-ЗЕЛЕНИЙ ГРАДІЄНТ */
-  background:
-    linear-gradient(
-      180deg,
-      #0b2e26 0%,
-      #103b31 50%,
-      #0a241f 100%
-    );
-
+  background: linear-gradient(180deg, #0b2e26 0%, #103b31 50%, #0a241f 100%);
   color: white;
 }
 
-/* контейнер */
 .app {
   max-width: 500px;
   margin: auto;
   padding: 15px;
 }
 
-/* заголовок */
 h2 {
   text-align: center;
   margin-bottom: 20px;
   font-size: 26px;
-
-  text-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
-/* карточки */
+.status {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #facc15;
+}
+
 .card {
   background: rgba(17, 24, 39, 0.85);
-
   padding: 15px;
   border-radius: 15px;
   margin-bottom: 15px;
-
-  border: 1px solid rgba(255,255,255,0.08);
-
-  backdrop-filter: blur(5px);
 }
 
-/* заголовки категорий */
 .card h3 {
   margin: 0 0 15px 0;
   text-align: center;
   font-size: 22px;
-
-  text-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
-/* варианты */
 .option {
   display: block;
   padding: 12px;
   margin: 8px 0;
-
   background: rgba(31, 41, 55, 0.9);
-
   border-radius: 10px;
   text-align: center;
-
   cursor: pointer;
   font-size: 18px;
-
-  transition: 0.2s;
 }
 
-.option:hover {
-  background: rgba(55, 65, 81, 0.95);
-}
-
-/* скрываем radio */
 input[type="radio"] {
   display: none;
 }
 
-/* выбранный вариант */
 input[type="radio"]:checked + label {
   background: #3b82f6;
 }
 
-/* кнопка */
 button {
   width: 100%;
   padding: 15px;
-
   font-size: 20px;
-
   border: none;
   border-radius: 12px;
-
   background: #22c55e;
   color: white;
-
   cursor: pointer;
-  margin-top: 10px;
-
-  transition: 0.2s;
 }
 
-button:hover {
-  background: #16a34a;
+button:disabled {
+  background: #6b7280;
+  cursor: not-allowed;
 }
 </style>
 </head>
@@ -122,8 +89,9 @@ button:hover {
 
 <h2>🗳 ТАЄМНЕ ОНЛАЙН-ГОЛОСУВАННЯ</h2>
 
-<div class="card">
+<div class="status" id="statusText">Очікування старту</div>
 
+<div class="card">
 <h3>Президент ДЮГО</h3>
 
 <input type="radio" name="dyugo" id="d1" value="1">
@@ -144,7 +112,6 @@ button:hover {
 </div>
 
 <div class="card">
-
 <h3>ЛІДЕР БУМ</h3>
 
 <input type="radio" name="boom" id="b1" value="1">
@@ -164,11 +131,10 @@ button:hover {
 
 </div>
 
-<button onclick="vote()">Голосувати</button>
+<button id="voteBtn" onclick="vote()" disabled>Голосувати</button>
 
 </div>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script src="firebase.js"></script>
@@ -177,46 +143,83 @@ button:hover {
 let deviceId = localStorage.getItem("deviceId");
 
 if (!deviceId) {
-  deviceId =
-    Math.random().toString(36).substring(2)
-    + Date.now();
-
+  deviceId = Math.random().toString(36).substring(2) + Date.now();
   localStorage.setItem("deviceId", deviceId);
 }
 
+const voteBtn = document.getElementById("voteBtn");
+const statusText = document.getElementById("statusText");
+
+let votingIsOpen = false;
+let timerInterval;
+
+db.ref("settings").on("value", snap => {
+  const settings = snap.val() || {};
+  const endTime = settings.endTime;
+  const votingOpen = settings.votingOpen;
+
+  clearInterval(timerInterval);
+
+  if (!votingOpen || !endTime) {
+    votingIsOpen = false;
+    voteBtn.disabled = true;
+    statusText.innerText = "Голосування ще не розпочато або завершено";
+    return;
+  }
+
+  timerInterval = setInterval(() => {
+    const left = endTime - Date.now();
+
+    if (left <= 0) {
+      votingIsOpen = false;
+      voteBtn.disabled = true;
+      statusText.innerText = "Голосування завершено";
+      clearInterval(timerInterval);
+      return;
+    }
+
+    votingIsOpen = true;
+    voteBtn.disabled = false;
+
+    const minutes = Math.floor(left / 1000 / 60);
+    const seconds = Math.floor((left / 1000) % 60);
+
+    statusText.innerText =
+      "До завершення: " +
+      String(minutes).padStart(2, "0") + ":" +
+      String(seconds).padStart(2, "0");
+  }, 1000);
+});
+
 function vote() {
+  if (!votingIsOpen) {
+    alert("Голосування закрите ❌");
+    return;
+  }
 
-  const dyugo =
-    document.querySelector('input[name="dyugo"]:checked');
-
-  const boom =
-    document.querySelector('input[name="boom"]:checked');
+  const dyugo = document.querySelector('input[name="dyugo"]:checked');
+  const boom = document.querySelector('input[name="boom"]:checked');
 
   if (!dyugo || !boom) {
     alert("Оберіть обидві категорії");
     return;
   }
 
-  const userRef =
-    db.ref("voted/" + deviceId);
+  const userRef = db.ref("voted/" + deviceId);
 
   userRef.once("value").then(snapshot => {
-
     if (snapshot.exists()) {
       alert("Ви вже голосували ❌");
       return;
     }
 
     db.ref("votes/dyugo").push(dyugo.value);
-
     db.ref("votes/boom").push(boom.value);
 
     userRef.set(true);
 
     alert("Голос зараховано ✅");
-
   });
-
 }
 </script>
 
