@@ -28,42 +28,57 @@ body {
 
 .qr {
   position: absolute;
-  top: 15px;
-  left: 15px;
-  width: 155px;
-  height: 155px;
+  top: 10px;
+  left: 10px;
+
+  width: 220px;
+  height: 220px;
+
   background: white;
   padding: 8px;
   border-radius: 14px;
+
   z-index: 50;
 }
 
 .screen {
   width: 1120px;
   height: 720px;
-  margin-left: 190px;
+
+  margin-left: 260px;
+
   background: rgba(11, 18, 38, 0.55);
+
   border-radius: 20px;
+
   overflow: hidden;
+
   display: flex;
   flex-direction: column;
+
   backdrop-filter: blur(5px);
 }
 
 .header {
   text-align: center;
+
   padding: 12px;
+
   font-size: 25px;
   font-weight: bold;
+
   background: rgba(17, 24, 39, 0.85);
+
   color: white;
 }
 
 .timer-box {
   margin-top: 8px;
+
   display: flex;
   justify-content: center;
   align-items: center;
+
   gap: 12px;
 }
 
@@ -74,10 +89,14 @@ body {
 
 .timer-box button {
   padding: 8px 14px;
+
   border: none;
   border-radius: 8px;
+
   background: #22c55e;
+
   color: white;
+
   cursor: pointer;
 }
 
@@ -87,26 +106,38 @@ body {
 
 .grid {
   display: grid;
+
   grid-template-columns: 1fr 1fr;
+
   gap: 28px;
+
   padding: 20px;
+
   height: 100%;
+
   box-sizing: border-box;
 }
 
 .box {
   display: flex;
   flex-direction: column;
+
   background: rgba(17, 24, 39, 0.78);
+
   border-radius: 18px;
+
   padding: 15px;
+
   backdrop-filter: blur(6px);
 }
 
 .title {
   text-align: center;
+
   margin-bottom: 5px;
+
   color: white;
+
   font-size: 24px;
   font-weight: bold;
 }
@@ -119,6 +150,7 @@ body {
 canvas {
   position: absolute;
   inset: 0;
+
   width: 100% !important;
   height: 100% !important;
 }
@@ -132,9 +164,11 @@ canvas {
 <div class="screen">
 
 <div class="header">
+
 РЕЗУЛЬТАТИ ТАЄМНОГО ГОЛОСУВАННЯ
 
 <div class="timer-box">
+
   <div id="timer">01:00</div>
 
   <button onclick="startTimer()">
@@ -144,23 +178,35 @@ canvas {
   <button onclick="resetTimer()">
     ⏹ Скинути
   </button>
+
 </div>
+
 </div>
 
 <div class="grid">
 
   <div class="box">
-    <div class="title">Президент ДЮГО</div>
+
+    <div class="title">
+      Президент ДЮГО
+    </div>
+
     <div class="chart-area">
       <canvas id="c1"></canvas>
     </div>
+
   </div>
 
   <div class="box">
-    <div class="title">Лідер БУМ</div>
+
+    <div class="title">
+      Лідер БУМ
+    </div>
+
     <div class="chart-area">
       <canvas id="c2"></canvas>
     </div>
+
   </div>
 
 </div>
@@ -168,17 +214,22 @@ canvas {
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
 <script src="firebase.js"></script>
 
 <script>
+
 const leaderColor = "#facc15";
 
 const baseColor1 = "#22c55e";
 const baseColor2 = "#a855f7";
 
 const options = {
+
   responsive: true,
+
   maintainAspectRatio: false,
 
   animation: {
@@ -187,37 +238,41 @@ const options = {
   },
 
   plugins: {
+
     legend: {
-      labels: {
-        color: "white",
-        font: {
-          size: 18,
-          weight: "bold"
-        }
-      }
+      display: false
     }
+
   },
 
   scales: {
+
     x: {
+
       position: "top",
 
       ticks: {
+
         color: "white",
+
         font: {
           size: 17,
           weight: "bold"
         },
+
         maxRotation: 0,
         minRotation: 0
+
       },
 
       grid: {
         display: false
       }
+
     },
 
     y: {
+
       ticks: {
         display: false
       },
@@ -231,152 +286,257 @@ const options = {
       },
 
       beginAtZero: true
+
     }
+
   }
+
 };
 
 const labels = [
+
   ["Марія", "Деканенко"],
+
   ["Денис", "Онищенко"],
+
   ["Дар'я", "Бутенко"],
+
   ["Дар'я", "Литвин"],
+
   ["Аріна", "Давиденко"]
+
 ];
 
-const chart1 = new Chart(document.getElementById("c1"), {
+const chart1 =
+
+new Chart(document.getElementById("c1"), {
+
   type: "bar",
+
   data: {
+
     labels: labels,
+
     datasets: [{
+
       label: "Президент ДЮГО",
+
       data: [0,0,0,0,0],
+
       backgroundColor: []
+
     }]
+
   },
+
   options
+
 });
 
-const chart2 = new Chart(document.getElementById("c2"), {
+const chart2 =
+
+new Chart(document.getElementById("c2"), {
+
   type: "bar",
+
   data: {
+
     labels: labels,
+
     datasets: [{
+
       label: "Лідер БУМ",
+
       data: [0,0,0,0,0],
+
       backgroundColor: []
+
     }]
+
   },
+
   options
+
 });
 
 function makeColors(data, baseColor) {
+
   const max = Math.max(...data);
 
   return data.map(v =>
-    (v === max && max > 0) ? leaderColor : baseColor
+
+    (v === max && max > 0)
+
+      ? leaderColor
+
+      : baseColor
+
   );
+
 }
 
 let updateTimeout;
 
 db.ref("/").on("value", snap => {
+
   const root = snap.val() || {};
+
   const data = root.votes || {};
+
   const testData = root.testVotes || {};
 
   const d1 = [0,0,0,0,0];
+
   const d2 = [0,0,0,0,0];
 
   if (data.dyugo) {
+
     Object.values(data.dyugo).forEach(v => {
+
       d1[v - 1]++;
+
     });
+
   }
 
   if (testData.dyugo) {
+
     Object.values(testData.dyugo).forEach(v => {
+
       d1[v - 1]++;
+
     });
+
   }
 
   if (data.boom) {
+
     Object.values(data.boom).forEach(v => {
+
       d2[v - 1]++;
+
     });
+
   }
 
   if (testData.boom) {
+
     Object.values(testData.boom).forEach(v => {
+
       d2[v - 1]++;
+
     });
+
   }
 
   clearTimeout(updateTimeout);
 
   updateTimeout = setTimeout(() => {
+
     chart1.data.datasets[0].data = d1;
+
     chart2.data.datasets[0].data = d2;
 
-    chart1.data.datasets[0].backgroundColor = makeColors(d1, baseColor1);
-    chart2.data.datasets[0].backgroundColor = makeColors(d2, baseColor2);
+    chart1.data.datasets[0].backgroundColor =
+      makeColors(d1, baseColor1);
+
+    chart2.data.datasets[0].backgroundColor =
+      makeColors(d2, baseColor2);
 
     chart1.update();
+
     chart2.update();
+
   }, 120);
+
 });
 
 let timerInterval;
 
 function startTimer() {
-  const endTime = Date.now() + 1 * 60 * 1000;
+
+  const endTime =
+    Date.now() + 1 * 60 * 1000;
 
   db.ref("settings").set({
+
     votingOpen: true,
+
     endTime: endTime
+
   });
+
 }
 
 function resetTimer() {
+
   db.ref("settings").set({
+
     votingOpen: false,
+
     endTime: null
+
   });
 
-  document.getElementById("timer").innerText = "01:00";
+  document.getElementById("timer").innerText =
+    "01:00";
+
   clearInterval(timerInterval);
+
 }
 
 db.ref("settings").on("value", snap => {
+
   const settings = snap.val() || {};
+
   const endTime = settings.endTime;
 
   clearInterval(timerInterval);
 
   if (!endTime) {
-    document.getElementById("timer").innerText = "01:00";
+
+    document.getElementById("timer").innerText =
+      "01:00";
+
     return;
+
   }
 
   timerInterval = setInterval(() => {
+
     const left = endTime - Date.now();
 
     if (left <= 0) {
-      document.getElementById("timer").innerText = "00:00";
+
+      document.getElementById("timer").innerText =
+        "00:00";
+
       clearInterval(timerInterval);
+
       db.ref("settings/votingOpen").set(false);
+
       return;
+
     }
 
-    const minutes = Math.floor(left / 1000 / 60);
-    const seconds = Math.floor((left / 1000) % 60);
+    const minutes =
+      Math.floor(left / 1000 / 60);
+
+    const seconds =
+      Math.floor((left / 1000) % 60);
 
     document.getElementById("timer").innerText =
-      String(minutes).padStart(2, "0") +
-      ":" +
-      String(seconds).padStart(2, "0");
+
+      String(minutes).padStart(2, "0")
+
+      + ":"
+
+      + String(seconds).padStart(2, "0");
 
   }, 1000);
+
 });
+
 </script>
 
 </body>
