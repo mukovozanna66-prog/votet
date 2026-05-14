@@ -13,17 +13,12 @@ html, body {
   padding: 0;
 
   background:
-  linear-gradient(
-    rgba(0,0,0,0.55),
-    rgba(0,0,0,0.55)
-  ),
+  linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
   url("fon.png") center/cover no-repeat fixed;
 
   font-family: Arial;
-
   width: 100vw;
   height: 100vh;
-
   overflow: hidden;
 }
 
@@ -33,42 +28,48 @@ body {
   align-items: center;
 }
 
+.qr {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 125px;
+  height: 125px;
+  background: white;
+  padding: 6px;
+  border-radius: 12px;
+  z-index: 50;
+}
+
 .screen {
   width: 1200px;
   height: 720px;
+  margin-left: 130px;
 
   background: rgba(11, 18, 38, 0.55);
-
   border-radius: 20px;
-
   overflow: hidden;
 
   display: flex;
   flex-direction: column;
-
   backdrop-filter: blur(5px);
 }
 
 .header {
   text-align: center;
-
   padding: 12px;
 
   font-size: 25px;
   font-weight: bold;
 
   background: rgba(17, 24, 39, 0.85);
-
   color: white;
 }
 
 .timer-box {
   margin-top: 8px;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   gap: 12px;
 }
 
@@ -79,14 +80,10 @@ body {
 
 .timer-box button {
   padding: 8px 14px;
-
   border: none;
   border-radius: 8px;
-
   background: #22c55e;
-
   color: white;
-
   cursor: pointer;
 }
 
@@ -96,15 +93,11 @@ body {
 
 .grid {
   display: grid;
-
   grid-template-columns: 1fr 1fr;
-
   gap: 28px;
 
   padding: 20px;
-
   height: 100%;
-
   box-sizing: border-box;
 }
 
@@ -113,9 +106,7 @@ body {
   flex-direction: column;
 
   background: rgba(17, 24, 39, 0.78);
-
   border-radius: 18px;
-
   padding: 15px;
 
   backdrop-filter: blur(6px);
@@ -123,11 +114,9 @@ body {
 
 .title {
   text-align: center;
-
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 
   color: white;
-
   font-size: 24px;
   font-weight: bold;
 }
@@ -149,6 +138,8 @@ canvas {
 
 <body>
 
+<img src="qr.png" class="qr">
+
 <div class="screen">
 
 <div class="header">
@@ -156,10 +147,10 @@ canvas {
 РЕЗУЛЬТАТИ ТАЄМНОГО ГОЛОСУВАННЯ
 
 <div class="timer-box">
-  <div id="timer">03:00</div>
+  <div id="timer">01:00</div>
 
   <button onclick="startTimer()">
-    ▶ Старт 3 хв
+    ▶ Старт 1 хв
   </button>
 
   <button onclick="resetTimer()">
@@ -172,52 +163,38 @@ canvas {
 <div class="grid">
 
   <div class="box">
-
-    <div class="title">
-      Президент ДЮГО
-    </div>
-
+    <div class="title">Президент ДЮГО</div>
     <div class="chart-area">
       <canvas id="c1"></canvas>
     </div>
-
   </div>
 
   <div class="box">
-
-    <div class="title">
-      Лідер БУМ
-    </div>
-
+    <div class="title">Лідер БУМ</div>
     <div class="chart-area">
       <canvas id="c2"></canvas>
     </div>
-
   </div>
 
 </div>
 
 </div>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
 <script src="firebase.js"></script>
 
 <script>
 const leaderColor = "#facc15";
 
-/* 🔥 КОЛЬОРИ */
 const baseColor1 = "#22c55e";
 const baseColor2 = "#a855f7";
 
 const options = {
-
   responsive: true,
-
   maintainAspectRatio: false,
+
+  indexAxis: "x",
 
   animation: {
     duration: 700,
@@ -225,35 +202,37 @@ const options = {
   },
 
   plugins: {
-
     legend: {
       labels: {
-        color: "white"
+        color: "white",
+        font: {
+          size: 18,
+          weight: "bold"
+        }
       }
     }
-
   },
 
   scales: {
-
     x: {
+      position: "top",
 
       ticks: {
         color: "white",
-
         font: {
-          size: 12
-        }
+          size: 18,
+          weight: "bold"
+        },
+        maxRotation: 0,
+        minRotation: 0
       },
 
       grid: {
         display: false
       }
-
     },
 
     y: {
-
       ticks: {
         display: false
       },
@@ -264,12 +243,11 @@ const options = {
 
       border: {
         display: false
-      }
+      },
 
+      beginAtZero: true
     }
-
   }
-
 };
 
 const labels = [
@@ -280,242 +258,139 @@ const labels = [
   "Аріна Давиденко"
 ];
 
-const chart1 =
-new Chart(document.getElementById("c1"), {
-
+const chart1 = new Chart(document.getElementById("c1"), {
   type: "bar",
-
   data: {
-
     labels: labels,
-
     datasets: [{
-
       label: "Президент ДЮГО",
-
       data: [0,0,0,0,0],
-
       backgroundColor: []
-
     }]
-
   },
-
   options
-
 });
 
-const chart2 =
-new Chart(document.getElementById("c2"), {
-
+const chart2 = new Chart(document.getElementById("c2"), {
   type: "bar",
-
   data: {
-
     labels: labels,
-
     datasets: [{
-
       label: "Лідер БУМ",
-
       data: [0,0,0,0,0],
-
       backgroundColor: []
-
     }]
-
   },
-
   options
-
 });
 
 function makeColors(data, baseColor) {
-
   const max = Math.max(...data);
 
   return data.map(v =>
-
-    (v === max && max > 0)
-
-      ? leaderColor
-
-      : baseColor
-
+    (v === max && max > 0) ? leaderColor : baseColor
   );
-
 }
 
 let updateTimeout;
 
-/* 🔥 ГОЛОСИ + TESTVOTES */
-
 db.ref("/").on("value", snap => {
-
   const root = snap.val() || {};
-
   const data = root.votes || {};
-
   const testData = root.testVotes || {};
 
   const d1 = [0,0,0,0,0];
   const d2 = [0,0,0,0,0];
 
-  /* ДЮГО */
-
   if (data.dyugo) {
-
     Object.values(data.dyugo).forEach(v => {
-
       d1[v - 1]++;
-
     });
-
   }
-
-  /* TEST ДЮГО */
 
   if (testData.dyugo) {
-
     Object.values(testData.dyugo).forEach(v => {
-
       d1[v - 1]++;
-
     });
-
   }
-
-  /* БУМ */
 
   if (data.boom) {
-
     Object.values(data.boom).forEach(v => {
-
       d2[v - 1]++;
-
     });
-
   }
 
-  /* TEST БУМ */
-
   if (testData.boom) {
-
     Object.values(testData.boom).forEach(v => {
-
       d2[v - 1]++;
-
     });
-
   }
 
   clearTimeout(updateTimeout);
 
   updateTimeout = setTimeout(() => {
-
     chart1.data.datasets[0].data = d1;
-
     chart2.data.datasets[0].data = d2;
 
-    chart1.data.datasets[0].backgroundColor =
-      makeColors(d1, baseColor1);
-
-    chart2.data.datasets[0].backgroundColor =
-      makeColors(d2, baseColor2);
+    chart1.data.datasets[0].backgroundColor = makeColors(d1, baseColor1);
+    chart2.data.datasets[0].backgroundColor = makeColors(d2, baseColor2);
 
     chart1.update();
     chart2.update();
-
   }, 120);
-
 });
-
-/* 🔥 ТАЙМЕР */
 
 let timerInterval;
 
 function startTimer() {
-
-  const endTime =
-    Date.now() + 3 * 60 * 1000;
+  const endTime = Date.now() + 3 * 60 * 1000;
 
   db.ref("settings").set({
-
     votingOpen: true,
-
     endTime: endTime
-
   });
-
 }
 
 function resetTimer() {
-
   db.ref("settings").set({
-
     votingOpen: false,
-
     endTime: null
-
   });
 
-  document.getElementById("timer").innerText =
-    "03:00";
-
+  document.getElementById("timer").innerText = "03:00";
   clearInterval(timerInterval);
-
 }
 
 db.ref("settings").on("value", snap => {
-
   const settings = snap.val() || {};
-
   const endTime = settings.endTime;
 
   clearInterval(timerInterval);
 
   if (!endTime) {
-
-    document.getElementById("timer").innerText =
-      "03:00";
-
+    document.getElementById("timer").innerText = "03:00";
     return;
-
   }
 
   timerInterval = setInterval(() => {
-
     const left = endTime - Date.now();
 
     if (left <= 0) {
-
-      document.getElementById("timer").innerText =
-        "00:00";
-
+      document.getElementById("timer").innerText = "00:00";
       clearInterval(timerInterval);
-
       db.ref("settings/votingOpen").set(false);
-
       return;
-
     }
 
-    const minutes =
-      Math.floor(left / 1000 / 60);
-
-    const seconds =
-      Math.floor((left / 1000) % 60);
+    const minutes = Math.floor(left / 1000 / 60);
+    const seconds = Math.floor((left / 1000) % 60);
 
     document.getElementById("timer").innerText =
-
-      String(minutes).padStart(2, "0")
-
-      + ":"
-
-      + String(seconds).padStart(2, "0");
+      String(minutes).padStart(2, "0") +
+      ":" +
+      String(seconds).padStart(2, "0");
 
   }, 1000);
-
 });
 </script>
 
