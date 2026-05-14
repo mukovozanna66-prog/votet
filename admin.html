@@ -11,11 +11,9 @@
 html, body {
   margin: 0;
   padding: 0;
-
   background:
   linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
   url("fon.png") center/cover no-repeat fixed;
-
   font-family: Arial;
   width: 100vw;
   height: 100vh;
@@ -32,23 +30,21 @@ body {
   position: absolute;
   top: 15px;
   left: 15px;
-  width: 125px;
-  height: 125px;
+  width: 155px;
+  height: 155px;
   background: white;
-  padding: 6px;
-  border-radius: 12px;
+  padding: 8px;
+  border-radius: 14px;
   z-index: 50;
 }
 
 .screen {
-  width: 1200px;
+  width: 1120px;
   height: 720px;
-  margin-left: 130px;
-
+  margin-left: 190px;
   background: rgba(11, 18, 38, 0.55);
   border-radius: 20px;
   overflow: hidden;
-
   display: flex;
   flex-direction: column;
   backdrop-filter: blur(5px);
@@ -57,10 +53,8 @@ body {
 .header {
   text-align: center;
   padding: 12px;
-
   font-size: 25px;
   font-weight: bold;
-
   background: rgba(17, 24, 39, 0.85);
   color: white;
 }
@@ -95,7 +89,6 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 28px;
-
   padding: 20px;
   height: 100%;
   box-sizing: border-box;
@@ -104,18 +97,15 @@ body {
 .box {
   display: flex;
   flex-direction: column;
-
   background: rgba(17, 24, 39, 0.78);
   border-radius: 18px;
   padding: 15px;
-
   backdrop-filter: blur(6px);
 }
 
 .title {
   text-align: center;
   margin-bottom: 5px;
-
   color: white;
   font-size: 24px;
   font-weight: bold;
@@ -129,7 +119,6 @@ body {
 canvas {
   position: absolute;
   inset: 0;
-
   width: 100% !important;
   height: 100% !important;
 }
@@ -143,7 +132,6 @@ canvas {
 <div class="screen">
 
 <div class="header">
-
 РЕЗУЛЬТАТИ ТАЄМНОГО ГОЛОСУВАННЯ
 
 <div class="timer-box">
@@ -157,7 +145,6 @@ canvas {
     ⏹ Скинути
   </button>
 </div>
-
 </div>
 
 <div class="grid">
@@ -194,8 +181,6 @@ const options = {
   responsive: true,
   maintainAspectRatio: false,
 
-  indexAxis: "x",
-
   animation: {
     duration: 700,
     easing: "easeOutQuart"
@@ -220,7 +205,7 @@ const options = {
       ticks: {
         color: "white",
         font: {
-          size: 18,
+          size: 17,
           weight: "bold"
         },
         maxRotation: 0,
@@ -251,11 +236,11 @@ const options = {
 };
 
 const labels = [
-  "Марія Деканенко",
-  "Денис Онищенко",
-  "Дар'я Бутенко",
-  "Дар'я Литвин",
-  "Аріна Давиденко"
+  ["Марія", "Деканенко"],
+  ["Денис", "Онищенко"],
+  ["Дар'я", "Бутенко"],
+  ["Дар'я", "Литвин"],
+  ["Аріна", "Давиденко"]
 ];
 
 const chart1 = new Chart(document.getElementById("c1"), {
@@ -357,7 +342,7 @@ function resetTimer() {
     endTime: null
   });
 
-  document.getElementById("timer").innerText = "03:00";
+  document.getElementById("timer").innerText = "01:00";
   clearInterval(timerInterval);
 }
 
@@ -368,7 +353,7 @@ db.ref("settings").on("value", snap => {
   clearInterval(timerInterval);
 
   if (!endTime) {
-    document.getElementById("timer").innerText = "03:00";
+    document.getElementById("timer").innerText = "01:00";
     return;
   }
 
